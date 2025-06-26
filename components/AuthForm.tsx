@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import Image from "next/image"
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
@@ -38,7 +39,13 @@ const AuthForm = () => {
   }
 
   return (
-    <div>
+    <div className="card-border lg:min-w-[566px]">
+      <div className="flex flex-col gap-6 card py-14 p-10">
+        <div className="flex flex-row gap-2 justify-center">
+          <Image src="/prep_ai.svg" alt="Logo" width={38} height={32} />
+          <h2>PrepAI</h2>
+        </div>
+      </div>
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
