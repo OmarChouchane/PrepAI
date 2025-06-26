@@ -17,11 +17,18 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import Link from "next/link";
 
-const formSchema = z.object({
-  username: z.string().min(2).max(50),
-});
+const authFormSchema = (type: FormType) => {
+  return z.object({
+    name: type === "sign-up" ? z.string().min(1, "Name is required") : z.string().optional(),
+    email: z.string().min(1, "Email is required").email("Invalid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+  });
+}
 
 const AuthForm = ({ type }: { type: FormType } ) => {
+  
+  const formSchema = authFormSchema(type);
+  
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
