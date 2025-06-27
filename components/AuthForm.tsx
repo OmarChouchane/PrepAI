@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
 import FormField from "./FormField";
+import { useRouter } from "next/navigation";
 
 const authFormSchema = (type: FormType) => {
   return z.object({
@@ -19,6 +20,8 @@ const authFormSchema = (type: FormType) => {
 }
 
 const AuthForm = ({ type }: { type: FormType } ) => {
+
+  const router = useRouter();
   
   const formSchema = authFormSchema(type);
   
@@ -34,13 +37,13 @@ const AuthForm = ({ type }: { type: FormType } ) => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (type === 'sign-up') {
-        // Handle sign-up logic here
-        console.log("Sign Up:", values);
-        toast.success("Account created successfully!");
+        console.log("Creating account with values:", values);
+        toast.success("Account created successfully. Please sign in.");
+        router.push("/sign-in");
+
       } else if (type === 'sign-in') {
-        // Handle sign-in logic here
-        console.log("Sign In:", values);
-        toast.success("Signed in successfully!");
+        toast.success("Signed in successfully.");
+        router.push("/");
       }
     } catch (error) {
       console.error(error);
@@ -56,7 +59,7 @@ const AuthForm = ({ type }: { type: FormType } ) => {
     <div className="card-border lg:min-w-[566px]">
       <div className="flex flex-col gap-6 card py-14 p-10">
         <div className="flex flex-row gap-2 justify-center">
-          <Image src="/prep_ai.svg" alt="Logo" width={38} height={32} />
+          <Image src="/prep_ai.svg" alt="Logo" width={38} height={38} />
           <h2>PrepAI</h2>
         </div>
 
@@ -76,6 +79,14 @@ const AuthForm = ({ type }: { type: FormType } ) => {
                 type="text"
               />
             )}
+
+            <FormField
+              control={form.control}
+              name="email"
+              label="Email"
+              placeholder="your email"
+              type="email"
+            />
 
             <FormField
               control={form.control}

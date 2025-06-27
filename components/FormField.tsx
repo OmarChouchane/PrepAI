@@ -19,7 +19,9 @@ const FormField = <T extends FieldValues>({control, name, label, placeholder, ty
       <FormItem>
         <FormLabel className="label">{label}</FormLabel>
         <FormControl>
-          <Input placeholder={placeholder} {...field} />
+          <Input placeholder={placeholder} 
+          {...field} 
+          />
         </FormControl>
         <FormDescription>{`This is your public display ${name}.`}</FormDescription>
         <FormMessage />
