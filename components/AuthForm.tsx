@@ -10,6 +10,10 @@ import Link from "next/link";
 import { toast } from "sonner";
 import FormField from "./FormField";
 import { useRouter } from "next/navigation";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+// Remove the incorrect import of auth from "@/firebase/client"
+const auth = getAuth();
+import { SignUp } from "@/lib/actions/auth.action";
 
 const authFormSchema = (type: FormType) => {
   return z.object({
@@ -34,10 +38,25 @@ const AuthForm = ({ type }: { type: FormType } ) => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (type === 'sign-up') {
-        console.log("Creating account with values:", values);
+        const { name, email, password } = values;
+
+        const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
+
+        const result = await SignUp({
+          uid: userCredentials.user.uid,
+          name: name!,
+          email,
+          password,
+        });
+
+        if (!result?.success) {
+          toast.error(result?.message || "An error occurred while creating the account.");
+          return;
+        }
+
         toast.success("Account created successfully. Please sign in.");
         router.push("/sign-in");
 
