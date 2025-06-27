@@ -142,7 +142,7 @@
     @apply bg-background text-foreground;
   }
   p {
-    @apply text-light-100;
+    @apply text-gray-300;
   }
   h2 {
     @apply text-3xl font-semibold;
