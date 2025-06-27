@@ -10,10 +10,9 @@ import Link from "next/link";
 import { toast } from "sonner";
 import FormField from "./FormField";
 import { useRouter } from "next/navigation";
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-// Remove the incorrect import of auth from "@/firebase/client"
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from "firebase/auth";
 const auth = getAuth();
-import { SignUp } from "@/lib/actions/auth.action";
+import { signUp, signIn } from "@/lib/actions/auth.action";
 
 const authFormSchema = (type: FormType) => {
   return z.object({
@@ -45,7 +44,7 @@ const AuthForm = ({ type }: { type: FormType } ) => {
 
         const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
 
-        const result = await SignUp({
+        const result = await signUp({
           uid: userCredentials.user.uid,
           name: name!,
           email,
@@ -61,6 +60,22 @@ const AuthForm = ({ type }: { type: FormType } ) => {
         router.push("/sign-in");
 
       } else if (type === 'sign-in') {
+
+        const { email, password } = values;
+        const userCredentials = await signInWithEmailAndPassword(auth, email, password);
+
+        const idToken = await userCredentials.user.getIdToken();
+
+        if(!idToken) {
+          toast.error("Failed to retrieve ID token. Please try again.");
+          return;
+        }
+
+        await signIn({
+          email,
+          idToken,
+        })
+
         toast.success("Signed in successfully.");
         router.push("/");
       }
