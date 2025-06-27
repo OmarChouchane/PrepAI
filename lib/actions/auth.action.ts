@@ -23,6 +23,11 @@ export async function signUp(params: SignUpParams){
             name,
             email,
         });
+
+        return {
+            success: true,
+            message: 'User created successfully. Please sign in.'
+        };
     } catch (e: any) {
         console.error('Error creating a user', e);
 
@@ -55,6 +60,11 @@ export async function signIn(params: SignInParams) {
         }
 
         await setSessionCookie(idToken);
+
+        return {
+            success: true,
+            message: 'Signed in successfully.'
+        };
         
     } catch (error) {
         console.error('Error signing in', error);
