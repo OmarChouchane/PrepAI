@@ -1,49 +1,56 @@
+import { NextRequest } from "next/server";
+
 import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
 import { getRandomInterviewCover } from "@/lib/utils";
 import { db } from "@/firebase/admin";
 
 export async function GET() {
-    return Response.json({ success: true, data: "VAPI generation endpoint is active." }, { status: 200 });
+  return Response.json({ success: true, data: "Thank You" }, { status: 200 });
 }
 
-export async function POST(request: Request) {
-    const {type, role, level, techstack, amount, userid} = await request.json();
-    try {
+export async function POST(request: NextRequest) {
+  const { type, role, level, techStack, amount, userId } = await request.json();
 
-         const { text: questions } = await generateText({
-            model: google('gemini-2.0-flash-001'),
-            prompt: `Prepare questions for a job interview.
-        The job role is ${role}.
-        The job experience level is ${level}.
-        The tech stack used in the job is: ${techstack}.
-        The focus between behavioural and technical questions should lean towards: ${type}.
-        The amount of questions required is: ${amount}.
-        Please return only the questions, without any additional text.
-        The questions are going to be read by a voice assistant so do not use "/" or "*" or any other special characters which might break the voice assistant.
-        Return the questions formatted like this:
-        ["Question 1", "Question 2", "Question 3"]
-        
-        Thank you! <3
-    `,});
+  try {
+    const { text: questions } = await generateText({
+      model: google("gemini-1.5-flash"),
+      prompt: `
+        Generate interview questions for the following job description, and return ONLY the questions in format like this: [question1, question2, question3].
+        Job Type: ${type}
+        Role: ${role}
+        Level: ${level}
+        Tech Stack: ${techStack}
+        Number of Questions: ${amount}
+      `,
+    });
+
+    console.log(questions);
 
     const interview = {
-        role,type, level,
-        techstack: techstack.split(','),
-        questions: JSON.parse(questions),
-        userId: userid,
-        finalized: true,
-        coverImage: getRandomInterviewCover(),
-        createdAt: new Date().toISOString(),
-        
-    }
+      role,
+      type,
+      level,
+      techstacl: techStack.split(","),
+      questions: JSON.parse(questions),
+      userId,
+      finalized: true,
+      coverImage: getRandomInterviewCover(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
 
     await db.collection("interviews").add(interview);
 
-    return Response.json({ success: true, data: interview }, { status: 200 });
-
-    } catch (error) {
-        console.error("Error in VAPI generation:", error);
-        return Response.json({ success: false, error: "Failed to generate VAPI." }, { status: 500 });
-    }
+    return Response.json(
+      { success: true, questions: questions },
+      { status: 200 }
+    );
+  } catch (e) {
+    console.error(e);
+    return Response.json(
+      { success: false, error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 }
