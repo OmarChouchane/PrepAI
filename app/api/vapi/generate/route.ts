@@ -1,3 +1,5 @@
+export const runtime = "edge"; // Add this at the top of your file
+// This ensures the function runs in the Edge Runtime, which is required for Next.js API routes to work with the Edge functions.
 import { NextRequest } from "next/server";
 
 import { generateText } from "ai";
@@ -5,12 +7,32 @@ import { google } from "@ai-sdk/google";
 import { getRandomInterviewCover } from "@/lib/utils";
 import { db } from "@/firebase/admin";
 
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
+  });
+}
+
 export async function GET() {
   return Response.json({ success: true, data: "Thank You" }, { status: 200 });
 }
 
 export async function POST(request: NextRequest) {
+  console.log("Generating interview questions...");
   const { type, role, level, techStack, amount, userId } = await request.json();
+  console.log("Request data:", {
+    type,
+    role,
+    level,
+    techStack,
+    amount,
+    userId,
+  });
 
   try {
     const { text: questions } = await generateText({
