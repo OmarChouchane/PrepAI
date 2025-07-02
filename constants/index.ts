@@ -1,5 +1,7 @@
 // import { CreateAssistantDTO } from "@vapi-ai/web/dist/api";
 import { z } from "zod";
+import { Interview } from "@/types/";
+
 
 export const mappings = {
   "react.js": "react",
