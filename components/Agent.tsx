@@ -72,6 +72,8 @@ function Agent({ userName, userId, type }: AgentProps) {
   }, [messages, callStatus, type, userId, router]);
 
   const handleCall = async () => {
+    console.log("Starting call with userId:", userId);
+    console.log("Starting call with userName:", userName);
     setCallStatus(CallStatus.CONNECTING);
 
     await vapi.start(ASSISTANT, {
