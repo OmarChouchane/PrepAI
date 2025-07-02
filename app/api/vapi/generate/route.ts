@@ -17,6 +17,9 @@ export async function OPTIONS() {
   });
 }
 
+const user = await getCurrentUser();
+
+
 export async function GET() {
   return Response.json({ success: true, data: "Thank You" }, { status: 200 });
 }
@@ -24,13 +27,14 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   const { type, role, level, techstack, amount } = await request.json();
 
-  const user = await getCurrentUser();
   if (!user || !user.id) {
     return Response.json(
       { success: false, error: "Unauthorized user" },
       { status: 401 }
     );
   }
+
+  
 
   try {
     const { text: questions } = await generateText({

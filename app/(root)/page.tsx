@@ -11,6 +11,7 @@ import type { Interview } from "@/types";
 const page = async () => {
 
   const user = await getCurrentUser();
+  
 
   const [userInterviews, latestInterviews] = await Promise.all([
     getInterviewsByUserId(user?.id ?? ""),
