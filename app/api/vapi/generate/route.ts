@@ -5,6 +5,17 @@ import { google } from "@ai-sdk/google";
 import { getRandomInterviewCover } from "@/lib/utils";
 import { db } from "@/firebase/admin";
 
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
+  });
+}
+
 export async function GET() {
   return Response.json({ success: true, data: "Thank You" }, { status: 200 });
 }
@@ -45,7 +56,11 @@ export async function POST(request: NextRequest) {
 
     return Response.json(
       { success: true, questions: questions },
-      { status: 200 }
+      { status: 200, 
+        headers: {
+        "Access-Control-Allow-Origin": "*",
+      }}
+
     );
   } catch (e) {
     console.error(e);
