@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     await db.collection("interviews").add(interview);
 
     return Response.json(
-      { success: true, questions: questions, interview },
+      { success: true, questions: questions, techStack: techStack },
       {
         status: 200,
         headers: {
