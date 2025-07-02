@@ -1,5 +1,5 @@
 "use server";
-import { SignInParams, SignUpParams, User } from "@/types";
+import { GetLatestInterviewsParams, SignInParams, SignUpParams, User } from "@/types";
 import { FirebaseError } from "firebase/app";
 import { auth, db } from "@/firebase/admin";
 import { cookies } from "next/headers";
@@ -121,15 +121,36 @@ export async function isAuthenticated() {
 }
 
 
-export async function getInterviewByUserId(userId: string): Promise<Interview[] | null> {
+export async function getInterviewsByUserId(
+  userId: string
+): Promise<Interview[] | null> {
   const interviews = await db
     .collection("interviews")
     .where("userId", "==", userId)
     .orderBy("createdAt", "desc")
     .get();
 
-        return interviews.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data()
-        })) as Interview[];
-    }
+  return interviews.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Interview[];
+}
+
+export async function GetLatestInterviews(
+  params: GetLatestInterviewsParams ): Promise<Interview[] | null> {
+
+    const { userId, limit = 20 } = params;
+
+  const interviews = await db
+    .collection("interviews")
+    .where("finalized", "==", true)
+    .where("userId", "!=", userId)
+    .orderBy("createdAt", "desc")
+    .limit(limit)
+    .get();
+
+  return interviews.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Interview[];
+}
