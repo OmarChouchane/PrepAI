@@ -71,6 +71,7 @@ function Agent({ userName, userId, type }: AgentProps) {
       router.push("/");
     }
   }, [messages, callStatus, type, userId, router]);
+  
 
   const handleCall = async () => {
     setCallStatus(CallStatus.CONNECTING);
@@ -78,7 +79,7 @@ function Agent({ userName, userId, type }: AgentProps) {
     await vapi.start(ASSISTANT, {
       variableValues: {
         username: userName,
-        userId: userId,
+        userId: "u7MAmJ0UpMZZ2ljTfgIw6AJWANP2",
       },
     });
   };

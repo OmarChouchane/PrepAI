@@ -24,6 +24,15 @@ export async function POST(request: NextRequest) {
     
   const { type, role, level, techStack, amount, userId } = await request.json();
 
+  console.log("Received data:", {
+    type,
+    role,
+    level,
+    techStack,
+    amount,
+    userId
+  });
+
   try {
     const { text: questions } = await generateText({
       model: google("gemini-1.5-flash"),
