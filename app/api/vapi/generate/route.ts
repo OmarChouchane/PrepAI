@@ -4,7 +4,32 @@ import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
 import { getRandomInterviewCover } from "@/lib/utils";
 import { db } from "@/firebase/admin";
-import { getCurrentUser } from "@/lib/actions/auth.action";
+import { cookies } from "next/headers";
+import { auth } from "@/firebase/admin";
+import { User } from "@/types";
+
+export const getCurrentUser = async () => {
+  const cookieStore = await cookies();
+
+  const session = cookieStore.get("session");
+
+  if (!session) {
+    return null;
+  }
+  const token = await auth.verifySessionCookie(session.value, true);
+
+  const user = await db.collection("users").doc(token.uid).get();
+
+  if (!user.exists) {
+    return null;
+  }
+
+  return {
+    ...user.data(),
+    id: user.id,
+  } as User;
+};
+
 
 export async function OPTIONS() {
   return new Response(null, {
