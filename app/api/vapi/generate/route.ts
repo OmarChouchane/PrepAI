@@ -23,6 +23,8 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   const { type, role, level, techStack, amount, userId } = await request.json();
 
+  console.log("Received request:", { type, role, level, techStack, amount, userId });
+
   try {
     const { text: questions } = await generateText({
       model: google("gemini-1.5-flash"),
@@ -52,7 +54,7 @@ export async function POST(request: NextRequest) {
     await db.collection("interviews").add(interview);
 
     return Response.json(
-      { success: true, questions: questions },
+      { success: true, questions: questions, interview },
       {
         status: 200,
         headers: {
