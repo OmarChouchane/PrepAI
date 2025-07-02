@@ -4,32 +4,6 @@ import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
 import { getRandomInterviewCover } from "@/lib/utils";
 import { db } from "@/firebase/admin";
-import { cookies } from "next/headers";
-import { auth } from "@/firebase/admin";
-import { User } from "@/types";
-
-export const getCurrentUser = async () => {
-  const cookieStore = await cookies();
-
-  const session = cookieStore.get("session");
-
-  if (!session) {
-    return null;
-  }
-  const token = await auth.verifySessionCookie(session.value, true);
-
-  const user = await db.collection("users").doc(token.uid).get();
-
-  if (!user.exists) {
-    return null;
-  }
-
-  return {
-    ...user.data(),
-    id: user.id,
-  } as User;
-};
-
 
 export async function OPTIONS() {
   return new Response(null, {
@@ -42,26 +16,14 @@ export async function OPTIONS() {
   });
 }
 
-
-
 export async function GET() {
   return Response.json({ success: true, data: "Thank You" }, { status: 200 });
 }
 
 export async function POST(request: NextRequest) {
+  const { type, role, level, techstack, amount, userId } = await request.json();
 
-  const user = await getCurrentUser();
 
-  const { type, role, level, techstack, amount } = await request.json();
-
-  if (!user || !user.id) {
-    return Response.json(
-      { success: false, error: "Unauthorized user" },
-      { status: 401 }
-    );
-  }
-
-  
 
   try {
     const { text: questions } = await generateText({
@@ -82,7 +44,7 @@ export async function POST(request: NextRequest) {
       level,
       techstack: (techstack ?? "").split(","),
       questions: JSON.parse(questions),
-      userId: user.id,
+      userId: userId,
       finalized: true,
       coverImage: getRandomInterviewCover(),
       createdAt: new Date().toISOString(),
