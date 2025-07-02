@@ -76,12 +76,11 @@ function Agent({ userName, userId, type }: AgentProps) {
     console.log("Starting call with userName:", userName);
     setCallStatus(CallStatus.CONNECTING);
 
-await vapi.start(ASSISTANT, {
-  variableValues: {
-    userId: userId,
-    username: userName,
-  },
-});
+    await vapi.start(ASSISTANT, {
+      variableValues: {
+        userId: userId,
+      },
+    });
   };
 
   const handleDisconnect = async () => {
