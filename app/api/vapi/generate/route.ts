@@ -21,9 +21,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const { type, role, level, techStack, amount, userId } = await request.json();
-
-  console.log("Received request:", { type, role, level, techStack, amount, userId });
+  const { type, role, level, techstack, amount, userId } = await request.json();
 
   try {
     const { text: questions } = await generateText({
@@ -33,7 +31,7 @@ export async function POST(request: NextRequest) {
         Job Type: ${type}
         Role: ${role}
         Level: ${level}
-        Tech Stack: ${techStack}
+        Tech Stack: ${techstack}
         Number of Questions: ${amount}
       `,
     });
@@ -42,7 +40,7 @@ export async function POST(request: NextRequest) {
       role,
       type,
       level,
-      techStack: (techStack ?? "").split(","),
+      techstack: (techstack ?? "").split(","),
       questions: JSON.parse(questions),
       userId,
       finalized: true,
@@ -54,7 +52,7 @@ export async function POST(request: NextRequest) {
     await db.collection("interviews").add(interview);
 
     return Response.json(
-      { success: true, questions: questions, techStack: techStack },
+      { success: true, interview },
       {
         status: 200,
         headers: {
