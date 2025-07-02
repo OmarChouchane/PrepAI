@@ -22,6 +22,7 @@ interface SavedMessage {
 const ASSISTANT = process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID;
 
 function Agent({ userName, userId, type }: AgentProps) {
+
   const router = useRouter();
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
