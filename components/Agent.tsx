@@ -79,7 +79,7 @@ function Agent({ userName, userId, type }: AgentProps) {
     await vapi.start(ASSISTANT, {
       variableValues: {
         username: userName,
-        userId: "u7MAmJ0UpMZZ2ljTfgIw6AJWANP2",
+        userId: userId,
       },
     });
   };
