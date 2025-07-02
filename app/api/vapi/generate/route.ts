@@ -21,7 +21,6 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-    
   const { type, role, level, techStack, amount, userId } = await request.json();
 
   try {
@@ -37,7 +36,6 @@ export async function POST(request: NextRequest) {
       `,
     });
 
-    
     const interview = {
       role,
       type,
@@ -55,11 +53,12 @@ export async function POST(request: NextRequest) {
 
     return Response.json(
       { success: true, questions: questions },
-      { status: 200, 
+      {
+        status: 200,
         headers: {
-        "Access-Control-Allow-Origin": "*",
-      }}
-
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
     );
   } catch (e) {
     console.error(e);
