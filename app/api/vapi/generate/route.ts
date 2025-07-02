@@ -42,7 +42,6 @@ export async function OPTIONS() {
   });
 }
 
-const user = await getCurrentUser();
 
 
 export async function GET() {
@@ -50,6 +49,9 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+
+  const user = await getCurrentUser();
+
   const { type, role, level, techstack, amount } = await request.json();
 
   if (!user || !user.id) {
