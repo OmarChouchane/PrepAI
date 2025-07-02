@@ -23,6 +23,8 @@ const ASSISTANT = process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID;
 
 function Agent({ userName, userId, type }: AgentProps) {
 
+  console.log("userName", userName);
+  console.log("userId", userId);  
   const router = useRouter();
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
@@ -71,7 +73,6 @@ function Agent({ userName, userId, type }: AgentProps) {
       router.push("/");
     }
   }, [messages, callStatus, type, userId, router]);
-  
 
   const handleCall = async () => {
     setCallStatus(CallStatus.CONNECTING);
