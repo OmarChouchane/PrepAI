@@ -25,13 +25,12 @@ export async function POST(request: NextRequest) {
   const { type, role, level, techstack, amount } = await request.json();
 
   const user = await getCurrentUser();
-  console.log("User:", user);
-  // if (!user || !user.id) {
-  //   return Response.json(
-  //     { success: false, error: "Unauthorized user" },
-  //     { status: 401 }
-  //   );
-  // }
+  if (!user || !user.id) {
+    return Response.json(
+      { success: false, error: "Unauthorized user" },
+      { status: 401 }
+    );
+  }
 
   try {
     const { text: questions } = await generateText({
@@ -52,7 +51,7 @@ export async function POST(request: NextRequest) {
       level,
       techstack: (techstack ?? "").split(","),
       questions: JSON.parse(questions),
-      userId: "u7MAmJ0UpMZZ2ljTfgIw6AJWANP2",
+      userId: user.id,
       finalized: true,
       coverImage: getRandomInterviewCover(),
       createdAt: new Date().toISOString(),
