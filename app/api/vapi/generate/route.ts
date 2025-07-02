@@ -4,6 +4,7 @@ import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
 import { getRandomInterviewCover } from "@/lib/utils";
 import { db } from "@/firebase/admin";
+import { getCurrentUser } from "@/lib/actions/auth.action";
 
 export async function OPTIONS() {
   return new Response(null, {
@@ -22,8 +23,9 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
     
-  const { type, role, level, techStack, amount, userId } = await request.json();
-
+  const { type, role, level, techStack, amount } = await request.json();
+  const currentUser = await getCurrentUser();
+  const userId = currentUser?.id;
   try {
     const { text: questions } = await generateText({
       model: google("gemini-1.5-flash"),
