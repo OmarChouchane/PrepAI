@@ -3,6 +3,7 @@ import { SignInParams, SignUpParams, User } from "@/types";
 import { FirebaseError } from "firebase/app";
 import { auth, db } from "@/firebase/admin";
 import { cookies } from "next/headers";
+import { Interview } from "@/types/";
 
 const SESSION_COOKIE_EXPIRES_IN = 60 * 60 * 24 * 7 * 1000; // 7 days
 
@@ -118,3 +119,17 @@ export async function isAuthenticated() {
     return false;
   }
 }
+
+
+export async function getInterviewByUserId(userId: string): Promise<Interview[] | null> {
+  const interviews = await db
+    .collection("interviews")
+    .where("userId", "==", userId)
+    .orderBy("createdAt", "desc")
+    .get();
+
+        return interviews.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        })) as Interview[];
+    }
