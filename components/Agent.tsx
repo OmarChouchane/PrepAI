@@ -68,7 +68,7 @@ function Agent({ userName, userId, type, interviewId, questions }: AgentProps) {
   }, []);
 
   const handleGenerateFeedback = React.useCallback(async (messages: SavedMessage[]) => {
-    const { success, feedbackId: id, error } = await createFeedback({
+    const { success, feedbackId: id } = await createFeedback({
       interviewId: interviewId!,
       userId: userId!,
       transcript: messages,
@@ -77,7 +77,7 @@ function Agent({ userName, userId, type, interviewId, questions }: AgentProps) {
     if (success && id) {
       router.push(`/interview/${interviewId}/feedback`);
     } else {
-      console.error("Failed to generate feedback:", error);
+      console.error("Failed to generate feedback");
     }
   }, [interviewId, userId, router]);
 
