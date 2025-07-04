@@ -4,7 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { dummyInterviews } from "@/constants";
 import  InterviewCard  from "@/components/InterviewCard";
-import { getCurrentUser, getInterviewsByUserId, GetLatestInterviews} from "@/lib/actions/auth.action";
+import { getCurrentUser } from "@/lib/actions/auth.action";
+import { getInterviewsByUserId, GetLatestInterviews} from "@/lib/actions/general.action";
 // Import Interview type (adjust the path if needed)
 import type { Interview } from "@/types";
 
