@@ -7,7 +7,8 @@ import DisplayTechIcons from './DisplayTechIcons';
 import { InterviewCardProps, Feedback } from '@/types';
 
 
-const InterviewCard = ({ interviewId, userId, role,  type, techstack, createdAt }: InterviewCardProps) => {
+
+const InterviewCard = ({ id, userId, role,  type, techstack, createdAt }: InterviewCardProps) => {
 
     const feedback = null as Feedback | null;
     const normalizedType = /mix/gi.test(type) ? "Mixed" : type;
@@ -60,12 +61,12 @@ const InterviewCard = ({ interviewId, userId, role,  type, techstack, createdAt 
             <Link
               href={
                 feedback
-                  ? `/interview/${interviewId}/feedback`
-                  : `/interview/${interviewId}`
+                  ? `/interview/${id}/feedback`
+                  : `/interview/${id}`
               }
-            />
-
-            {feedback ? "Check Feedback" : "View Interview"}
+            >
+              {feedback ? "Check Feedback" : "View Interview"}
+            </Link>
           </Button>
         </div>
       </div>
