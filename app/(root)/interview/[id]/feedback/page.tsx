@@ -16,12 +16,16 @@ const Feedback = async ({ params }: RouteParams) => {
   const user = await getCurrentUser();
 
   const interview = await getInterviewById(id);
+
   if (!interview) redirect("/");
 
   const feedback = await GetFeedbackByInterviewId({
     interviewId: id,
     userId: user?.id!,
   });
+
+  
+
 
   return (
     <section className="section-feedback">

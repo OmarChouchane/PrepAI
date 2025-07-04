@@ -111,22 +111,27 @@ export async function GetFeedbackByInterviewId(
   params: GetFeedbackByInterviewIdParams
 ): Promise<Feedback | null> {
   const { interviewId, userId } = params;
+  try {
+    const feedbackQuery = db
+      .collection("feedback")
+      .where("interviewId", "==", interviewId)
+      .where("userId", "==", userId)
+      .limit(1);
 
-  const feedback = await db
-    .collection("feedback")
-    .where("interviewId", "==", interviewId)
-    .where("userId", "!=", userId)
-    .limit(1)
-    .get();
+    const feedback = await feedbackQuery.get();
 
     if (feedback.empty) {
       return null;
     }
 
     const feedbackDoc = feedback.docs[0];
-    return {
-        id: feedbackDoc.id,
-        ...feedbackDoc.data(),
-        } as Feedback;
 
+    return {
+      id: feedbackDoc.id,
+      ...feedbackDoc.data(),
+    } as Feedback;
+  } catch (error) {
+    console.error("Error in GetFeedbackByInterviewId:", error);
+    return null;
+  }
 }
